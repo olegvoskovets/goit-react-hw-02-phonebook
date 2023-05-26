@@ -9,7 +9,7 @@
 }
 .form {
   width: 300px;
-  height: 150px;
+  height: 200px;
   border: 1px solid gray;
   display: flex;
   flex-direction: column;
@@ -27,6 +27,7 @@
   font-size: 20px;
   padding: 5px;
 }
+
 .input:focus {
   outline: none;
   border: 1px solid rgb(128, 207, 238);
@@ -37,5 +38,8 @@ button {
   width: 120px;
   cursor: pointer;
   border: 1px solid rgb(179, 176, 176);
-  border: none;
+  background-color: rgb(204, 199, 199);
+}
+button:hover {
+  background-color: rgb(177, 172, 172);
 }
