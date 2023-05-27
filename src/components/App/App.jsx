@@ -10,27 +10,9 @@ import { Filter } from 'components/Filter/Filter';
 export class App extends Component {
   state = {
     contacts: contactsDefault,
-    // name: '',
-    // number: '',
     filter: '',
   };
-  // handleChange = e => {
-  //   // e.preventDefault();
-  //   switch (e.target.name) {
-  //     case 'name':
-  //       this.setState({
-  //         name: e.target.value,
-  //       });
-  //       break;
-  //     case 'number':
-  //       this.setState({
-  //         number: e.target.value,
-  //       });
-  //       break;
-  //     default:
-  //       console.log('error');
-  //   }
-  // };
+
   checkName = name => {
     const result = this.state.contacts.find(contact => contact.name === name);
     return result ? true : false;
@@ -78,11 +60,7 @@ export class App extends Component {
     return (
       <div className={css.content}>
         <h1>Phonebook</h1>
-        <ContactForm
-          addContact={this.addContact}
-          state={this.state}
-          // handleChange={this.handleChange}
-        />
+        <ContactForm addContact={this.addContact} />
 
         <h2 className={css.contact}>Contacts</h2>
 
