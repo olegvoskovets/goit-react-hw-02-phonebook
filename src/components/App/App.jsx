@@ -33,10 +33,8 @@ export class App extends Component {
     };
 
     this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
+      contacts: [newContact, ...prevState.contacts],
     }));
-    this.state.name = '';
-    this.state.number = '';
   };
 
   handleFilter = e => {
