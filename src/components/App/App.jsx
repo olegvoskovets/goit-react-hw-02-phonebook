@@ -5,57 +5,58 @@ import css from './App.module.css';
 import contactsDefault from '../../Data/contacts.json';
 import ContactsList from 'components/ContactsList/ContactsList';
 import { ContactForm } from 'components/ContactForm/ContactForm';
+import { Filter } from 'components/Filter/Filter';
 
 export class App extends Component {
   state = {
     contacts: contactsDefault,
-    name: '',
-    number: '',
+    // name: '',
+    // number: '',
     filter: '',
   };
-  handleChange = e => {
-    e.preventDefault();
-    switch (e.target.name) {
-      case 'name':
-        this.setState({
-          name: e.target.value,
-        });
-        break;
-      case 'number':
-        this.setState({
-          number: e.target.value,
-        });
-        break;
-      default:
-        console.log('error');
-    }
-  };
+  // handleChange = e => {
+  //   // e.preventDefault();
+  //   switch (e.target.name) {
+  //     case 'name':
+  //       this.setState({
+  //         name: e.target.value,
+  //       });
+  //       break;
+  //     case 'number':
+  //       this.setState({
+  //         number: e.target.value,
+  //       });
+  //       break;
+  //     default:
+  //       console.log('error');
+  //   }
+  // };
   checkName = name => {
     const result = this.state.contacts.find(contact => contact.name === name);
     return result ? true : false;
   };
 
-  addContact = e => {
-    e.preventDefault();
-    if (this.state.name !== '' || this.state.number !== '') {
-      if (this.checkName(this.state.name)) {
-        alert('Такий контакт вже існує !!!');
-        return;
-      }
-      const newContact = {
-        id: nanoid(),
-        name: this.state.name,
-        number: this.state.number,
-      };
+  addContact = obj => {
+    // e.preventDefault();
+    const { name, number } = obj;
 
-      this.setState(prevState => ({
-        contacts: [...this.state.contacts, newContact],
-        // prevState.contacts.push(newContact),
-      }));
-      this.state.name = '';
-      this.state.number = '';
+    if (this.checkName(name)) {
+      alert('Такий контакт вже існує !!!');
+      return;
     }
+    const newContact = {
+      id: nanoid(),
+      name: name,
+      number: number,
+    };
+
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
+    this.state.name = '';
+    this.state.number = '';
   };
+
   handleFilter = e => {
     this.setState({
       filter: e.target.value,
@@ -80,27 +81,17 @@ export class App extends Component {
         <ContactForm
           addContact={this.addContact}
           state={this.state}
-          handleChange={this.handleChange}
+          // handleChange={this.handleChange}
         />
 
         <h2 className={css.contact}>Contacts</h2>
-        <div className={css.contacts}>
-          <div className={css.filter}>
-            <span>Find contacts by name</span>
-            <input
-              type="text"
-              name="filter"
-              className={css.input}
-              onChange={this.handleFilter}
-              value={this.state.filter}
-            />
-          </div>
 
-          <ContactsList
-            visibleContacts={visibleContacts}
-            deleteContact={this.deleteContact}
-          />
-        </div>
+        <Filter handleFilter={this.handleFilter} filter={this.state.filter} />
+
+        <ContactsList
+          visibleContacts={visibleContacts}
+          deleteContact={this.deleteContact}
+        />
       </div>
     );
   }
