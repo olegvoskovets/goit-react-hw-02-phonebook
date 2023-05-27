@@ -3,14 +3,18 @@ import { nanoid } from 'nanoid';
 
 import css from './App.module.css';
 import contactsDefault from '../../Data/contacts.json';
+import ContactsList from 'components/ContactsList/ContactsList';
+import { ContactForm } from 'components/ContactForm/ContactForm';
 
 export class App extends Component {
   state = {
     contacts: contactsDefault,
     name: '',
     number: '',
+    filter: '',
   };
   handleChange = e => {
+    e.preventDefault();
     switch (e.target.name) {
       case 'name':
         this.setState({
@@ -26,15 +30,24 @@ export class App extends Component {
         console.log('error');
     }
   };
+  checkName = name => {
+    const result = this.state.contacts.find(contact => contact.name === name);
+    return result ? true : false;
+  };
 
   addContact = e => {
     e.preventDefault();
     if (this.state.name !== '' || this.state.number !== '') {
+      if (this.checkName(this.state.name)) {
+        alert('Такий контакт вже існує !!!');
+        return;
+      }
       const newContact = {
         id: nanoid(),
         name: this.state.name,
         number: this.state.number,
       };
+
       this.setState(prevState => ({
         contacts: [...this.state.contacts, newContact],
         // prevState.contacts.push(newContact),
@@ -43,49 +56,50 @@ export class App extends Component {
       this.state.number = '';
     }
   };
+  handleFilter = e => {
+    this.setState({
+      filter: e.target.value,
+    });
+  };
+  deleteContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    }));
+  };
+  getVisibleContact = () => {
+    const { contacts, filter } = this.state;
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLocaleLowerCase())
+    );
+  };
   render() {
-    // model.id = nanoid();
+    const visibleContacts = this.getVisibleContact();
     return (
       <div className={css.content}>
-        <form className={css.form} onSubmit={this.addContact}>
-          <label className={css.label}>
-            Name
+        <h1>Phonebook</h1>
+        <ContactForm
+          addContact={this.addContact}
+          state={this.state}
+          handleChange={this.handleChange}
+        />
+
+        <h2 className={css.contact}>Contacts</h2>
+        <div className={css.contacts}>
+          <div className={css.filter}>
+            <span>Find contacts by name</span>
             <input
-              className={css.input}
               type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-              // onChange={this.handleChange}
-              value={this.state.name}
-              onChange={this.handleChange}
+              name="filter"
+              className={css.input}
+              onChange={this.handleFilter}
+              value={this.state.filter}
             />
-          </label>
-          <input
-            className={css.input}
-            type="tel"
-            name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            value={this.state.number}
-            onChange={this.handleChange}
+          </div>
+
+          <ContactsList
+            visibleContacts={visibleContacts}
+            deleteContact={this.deleteContact}
           />
-
-          <button type="submit">Add contact</button>
-        </form>
-
-        <div className="contacts">
-          <span>Contacts</span>
-          <ul>
-            {this.state.contacts.map(contact => (
-              <li key={contact.id}>
-                <span>{contact.name}</span>
-                <span> : {contact.number}</span>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     );
