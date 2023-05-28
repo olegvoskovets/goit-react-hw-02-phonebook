@@ -9,7 +9,7 @@ export class ContactForm extends Component {
   };
 
   handleChange = e => {
-    console.log(e.target.form.elements[e.target.name].value);
+    // console.log(e.target.form.elements[e.target.name].value);
     this.setState({
       [e.target.name]: e.target.form.elements[e.target.name].value,
     });
