@@ -9,20 +9,25 @@ export class ContactForm extends Component {
   };
 
   handleChange = e => {
-    switch (e.target.name) {
-      case 'name':
-        this.setState({
-          name: e.target.value,
-        });
-        break;
-      case 'number':
-        this.setState({
-          number: e.target.value,
-        });
-        break;
-      default:
-        console.log('error');
-    }
+    console.log(e.target.form.elements[e.target.name].value);
+    this.setState({
+      [e.target.name]: e.target.form.elements[e.target.name].value,
+    });
+
+    // switch (e.target.name) {
+    //   case 'name':
+    //     this.setState({
+    //       name: e.target.value,
+    //     });
+    //     break;
+    //   case 'number':
+    //     this.setState({
+    //       number: e.target.value,
+    //     });
+    //     break;
+    //   default:
+    //     console.log('error');
+    // }
   };
   handleSubmitaddContact = e => {
     e.preventDefault();
